@@ -171,3 +171,51 @@ async function init(){
 }
 
 init();
+
+
+(function(){
+  const btn = document.getElementById('addToCalendar');
+  if(!btn) return;
+
+  btn.addEventListener('click', () => {
+    // Event: SATURDAY, OCT. 25, 2025 — 14:00–22:00 (Berlin)
+    const ICS = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//LTFA//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'BEGIN:VEVENT',
+      `UID:ltfa-20251025@ltfa`,
+      `DTSTAMP:${toStamp(new Date())}`,
+      'DTSTART;TZID=Europe/Berlin:20251025T140000',
+      'DTEND;TZID=Europe/Berlin:20251025T220000',
+      'SUMMARY:LTFA — Screening Day',
+      'LOCATION:Ackerstrasse 9, 10115 Berlin',
+      'DESCRIPTION:Films, music, conversation, and drinks.',
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    const blob = new Blob([ICS], {type:'text/calendar;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'LTFA-2025-10-25.ics';
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(a.href);
+    a.remove();
+  });
+
+  function toStamp(d){
+    const pad = n => String(n).padStart(2,'0');
+    return (
+      d.getUTCFullYear() +
+      pad(d.getUTCMonth()+1) +
+      pad(d.getUTCDate()) + 'T' +
+      pad(d.getUTCHours()) +
+      pad(d.getUTCMinutes()) +
+      pad(d.getUTCSeconds()) + 'Z'
+    );
+  }
+})();
