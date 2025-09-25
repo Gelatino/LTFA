@@ -1,7 +1,7 @@
 :root{
   --paper:#f5f1ea;
   --ink:#111;
-  --frame:22px;                 /* frame thickness */
+  --frame:18px;                 /* frame thickness */
   --gap:clamp(16px,3vw,40px);
 }
 
@@ -73,7 +73,7 @@ body{
   font:300 clamp(12px,2.2vw,18px)/1.2 Montserrat, Futura, system-ui, sans-serif;
   letter-spacing:.06em;
 }
-.frameTop{ bottom:100%; margin-bottom:.4em; }
+.frameTop{ bottom:100%; margin-bottom:.4em; left:5%}
 .frameBottom{ top:100%; margin-top:.4em; }
 
 /* Mobile overlapping vase (hidden on desktop) */
@@ -125,7 +125,7 @@ body{
 
 /* ===== Mobile tweaks ===== */
 @media (max-width:720px){
-  :root{ --frame:14px; }
+  :root{ --frame:10px; }
   .grid{ grid-template-columns:1fr; }
 
   .vase{ display:none; } /* hide desktop vase on mobile */
