@@ -1,134 +1,159 @@
-:root {
-  --bg: #780000;
-  --accent-red: #c1121f;
-  --cream: #fdf0d5;
-  --navy: #003049;
-  --blue: #669bbc;
-}
-*{box-sizing:border-box}
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: var(--bg);
-  color: var(--cream);
-  font-family: "Major Mono Display", monospace;
+:root{
+  --paper:#f5f1ea;
+  --ink:#111;
+  --frame:22px;                 /* frame thickness */
+  --gap:clamp(16px,3vw,40px);
 }
 
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-.header{position:sticky;top:0;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(6px);z-index:5}
-.brand{font-weight:900;letter-spacing:.2px;font-size:16px;color:#fff;text-decoration:none}
-.wrap{scroll-snap-type:y mandatory;overflow-y:auto;height:100svh;  position: relative;
-  z-index: 1;}
-.panel{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px 18px 32px;scroll-snap-align:start;gap:18px;background:transparent;}
-.h1{font-size:80px;line-height:1.03;margin:0;text-align:center}
-
-.h2{font-size:22px;line-height:1.1;margin:0;text-align:center}
-.sub{color:var(--ink2);font-size:14px;text-align:center}
-.addr{white-space:pre-line;text-align:center;font-weight:700;letter-spacing:.6px}
-.block-head{display:flex;flex-direction:column;align-items:center;gap:8px}
-.block-title{font-weight:900;font-size:26px;margin:0;text-align:center}
-.block-music{font-size:13px;color:var(--ink2)}
-.films{display:grid;gap:16px;grid-template-columns: repeat(2, minmax(0,1fr));width:100%;max-width:720px;margin-top:6px;}
-@media(min-width:700px){.films{grid-template-columns: repeat(3, minmax(0,1fr));}}
-.film{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
-.thumb {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 8px solid var(--blue); /* NEW border color */
-  box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  background: #8d1d1d;
-  display:flex;align-items:center;justify-content:center;
-}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb .ph{font-weight:900;color:#fff;opacity:.7}
-.film-title {
-  font-weight: 800;
-  font-size: 15px;
-  color: var(--cream); /* film name */
-}
-.film-meta {
-  font-size: 12px;
-  color: var(--cream);  /* director */
-}
-.film-time {
-  font-size: 12px;
-  color: var(--cream);  /* time */
-  font-weight: 700;
-}
-.small{font-size:12px;color:var(--ink2)}
-.sep{opacity:.3}
-.footer{padding:16px;text-align:center;color:#fff;opacity:.7;font-size:12px}
-.err{position:fixed;bottom:0;left:0;right:0;background:#000000cc;color:#fff;padding:10px 12px;font-size:12px;z-index:9999;display:none}
-.err.show{display:block}
-
-#bg-blob {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: var(--bg); /* same red background */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family: Montserrat, Futura, "Avenir Next", system-ui, sans-serif;
 }
 
-/* About / Manifesto panel */
-.panel.about {
-  align-items: center;
-  text-align: center;
-  padding: 28px 18px 36px;
+/* ===== Cards + snap ===== */
+.cards{
+  scroll-snap-type: y mandatory;
+  overflow-y: auto; height:100dvh;
+}
+.card{
+  scroll-snap-align: start;
+  min-height:100dvh;
+  display:grid; place-items:center;
+  padding: clamp(8px, 3vw, 32px);
 }
 
-.about-title {
-  color: var(--accent-red);      /* #c1121f */
-  font-size: 16px;
-  letter-spacing: 0.2em;
-  margin: 0 0 10px;
+/* ===== Dotnav ===== */
+.dotnav{
+  position:fixed; right:18px; top:50%; translate:0 -50%;
+  display:flex; flex-direction:column; gap:10px; z-index:999;
+}
+.dotnav .dot{
+  width:10px; height:10px; border-radius:50%;
+  background:#0003; display:block; transition:transform .2s, background .2s;
+}
+.dotnav .dot.active{ background:var(--ink); transform:scale(1.25); }
+
+/* ===== HERO (Card 1) ===== */
+.wrap{ width:min(1100px,94vw); }
+.grid{
+  display:grid; grid-template-columns:1fr 1.4fr;
+  gap:var(--gap); align-items:center; position:relative;
 }
 
-.about-copy {
-  color: var(--cream);           /* #fdf0d5 */
-  max-width: 40ch;               /* narrow column for mobile readability */
-  line-height: 1.35;
-  letter-spacing: 0.02em;
-  white-space: pre-line;         /* keeps your line breaks */
-  margin: 0;
-  /* optional: slight tint plate behind text for extra contrast */
-  /* background: rgba(0,48,73,0.08);  border-radius: 12px; padding: 12px; */
+/* Desktop vase */
+.vase{ position:relative; width:min(280px,32vw); aspect-ratio:242.37/494.42; }
+.vase img{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+#vaseOpen_desktop{ display:block; }
+#vaseClosed_desktop{ display:none; }
+
+/* Frame that hugs the title */
+.titleFrame{
+  position:relative;
+  background:var(--paper);
+}
+.titleFrame::before{
+  content:""; position:absolute; inset:0;
+  border:var(--frame) solid var(--ink); z-index:0;
 }
 
-/* (optional) wider on desktop */
-@media (min-width: 700px) {
-  .about-copy { max-width: 60ch; }
+/* Title block */
+.title{
+  position:relative; z-index:2;
+  display:grid; gap:clamp(8px,1.4vw,16px);
+  font:900 clamp(44px,8.8vw,120px)/1.02 Montserrat, Futura, system-ui, sans-serif;
+  color:var(--ink); letter-spacing:.3px; text-align:right;
+  padding:clamp(6px,1vw,12px);
 }
 
-.dotnav {
-  position: fixed;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 100;
+/* Labels OUTSIDE the frame (top/bottom) */
+.frameTop,.frameBottom{
+  position:absolute; right:0;
+  font:300 clamp(12px,2.2vw,18px)/1.2 Montserrat, Futura, system-ui, sans-serif;
+  letter-spacing:.06em;
+}
+.frameTop{ bottom:100%; margin-bottom:.4em; }
+.frameBottom{ top:100%; margin-top:.4em; }
+
+/* Mobile overlapping vase (hidden on desktop) */
+.vaseOverlap{ display:none; }
+#vaseOpen_mobile{ display:block; }
+#vaseClosed_mobile{ display:none; }
+
+/* ===== BLOCK CARDS (2 & 3) ===== */
+.block{ width:min(1100px,94vw); margin-inline:auto; }
+.block-head{ width:100%; display:flex; justify-content:flex-start; margin-bottom:clamp(12px,2vw,20px); }
+.block-time{ font-weight:300; letter-spacing:.06em; font-size:clamp(14px,2.2vw,18px); }
+
+.frame{
+  position:relative; width:100%;
+  border:var(--frame) solid var(--ink);
+  background:var(--paper);
+  padding: clamp(8px,1.2vw,14px);
 }
 
-.dotnav button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid var(--cream);
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.3s, transform 0.2s;
+.film-list{ display:grid; gap:clamp(8px,1.2vw,12px); }
+
+.film{
+  position:relative; min-height:clamp(60px, 10vh, 90px);
+  display:flex; align-items:flex-end; overflow:hidden;
+  border:2px solid var(--ink);
+  background:#e8e2d9; /* fallback */
 }
-
-.dotnav button.active {
-  background: var(--accent-red);  /* or try var(--blue) */
-  transform: scale(1.2);
+.film .bg{
+  position:absolute; inset:0; background-size:cover; background-position:center;
+  opacity:.80;
 }
+.film-meta{
+  position:relative; width:100%;
+  padding: clamp(10px,2vw,16px);
+  display:flex; justify-content:space-between; align-items:flex-end; gap:16px;
+}
+.film-title{ font-weight:800; font-size:clamp(20px,4.2vw,34px); line-height:1.05; }
+.film-sub{ font-weight:500; font-size:clamp(12px,2.2vw,16px); opacity:.9; }
+.film-meta a{ color:var(--ink); text-decoration:underline; }
 
+/* ===== HANG (Card 4) ===== */
+.card-hang{ text-align:center; }
+.hang-wrap h2{ font-weight:900; font-size:clamp(36px,8vw,84px); line-height:1.02; margin:0 0 8px 0; }
+.hang-wrap p{ margin:0 0 26px 0; font-weight:300; letter-spacing:.06em; font-size:clamp(14px,2.6vw,18px); }
 
+.card-hang .vase{ width:min(320px,42vw); margin-inline:auto; }
+#vaseOpen_hang{ display:block; }
+#vaseClosed_hang{ display:none; }
+
+/* ===== Mobile tweaks ===== */
+@media (max-width:720px){
+  :root{ --frame:14px; }
+  .grid{ grid-template-columns:1fr; }
+
+  .vase{ display:none; } /* hide desktop vase on mobile */
+
+  /* Make title big on mobile; let width dictate size */
+  .titleFrame{ container-type:inline-size; }
+  .title{ font:900 clamp(40px,16cqi,110px)/.98 Montserrat, Futura, system-ui, sans-serif; }
+
+  /* overlap vase half in/out of frame */
+  .vaseOverlap{
+    display:block; position:absolute;
+    left:0%; bottom:-30%;
+    width:30%; max-width:200px; aspect-ratio:242.37/494.42;
+    z-index:3; pointer-events:none;
+  }
+
+  /* hide border under the vase with a cutout */
+  .card-hero .titleFrame::after{
+    content:""; position:absolute;
+    left:-10%; bottom:-30%;
+    width:30%; height:80%;
+    background:var(--paper); z-index:2; /* over border, under vase */
+  }
+
+  /* keep labels readable */
+  .frameTop,.frameBottom{
+    font-size:clamp(12px,3.4vw,16px);
+  }
+
+  .film{ min-height:clamp(60px, 10vh, 90px); }
+}

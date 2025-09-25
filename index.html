@@ -1,53 +1,92 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shortfilms × Cumbia</title>
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="assets/styles.css">
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Fredoka:wght@300..700&family=Hubballi&family=Major+Mono+Display&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LONG TIME FILM AFFAIR</title>
+  <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <div class="dotnav" id="dotnav"></div>
- 
-  <div class="wrap" id="wrap">
-  <canvas id="bg-blob"></canvas>
-    <section class="panel" id="presentation">
-      <h1 class="h1">LONG TIME FIlM AFFAIR</h1>
-      <p class="h2">SATURDAY, OCT. 25</p>
-      <p class="addr">ACKERSTRASSE 9</br>10115 BERLIN</p>
-      <p class="small">Swipe/scroll ↓</p>
+
+  <!-- Dot navigation -->
+  <nav class="dotnav" aria-label="Section navigation">
+    <a href="#card-1" aria-label="Hero"      class="dot active"></a>
+    <a href="#card-2" aria-label="Block 1"   class="dot"></a>
+    <a href="#card-3" aria-label="Block 2"   class="dot"></a>
+    <a href="#card-4" aria-label="Hangout"   class="dot"></a>
+  </nav>
+
+  <main class="cards">
+    <!-- CARD 1 — your current hero (kept as before) -->
+    <section class="card card-hero" id="card-1">
+      <div class="wrap">
+        <div class="grid">
+          <!-- Left: desktop vase -->
+          <div class="vase" aria-hidden="true">
+            <img id="vaseOpen_desktop"   src="assets/img/vase_open.svg"   alt="">
+            <img id="vaseClosed_desktop" src="assets/img/vase_close.svg"  alt="">
+          </div>
+
+          <!-- Right: frame that hugs the title -->
+          <section class="titleFrame" aria-label="SHORT TIME FILM AFFAIR">
+            <!-- Labels OUTSIDE the frame (top/bottom, thin) -->
+            <div class="frameTop">SATURDAY, OCT. 25</div>
+
+            <div class="title">
+              <div>SHORT</div>
+              <div>TIME</div>
+              <div>FILM</div>
+              <div>AFFAIR</div>
+            </div>
+
+            <div class="frameBottom">ACKERSTRASSE 9 · 10115 BERLIN</div>
+
+            <!-- Mobile vase overlapping bottom-left (half in/out) -->
+            <div class="vaseOverlap" aria-hidden="true">
+              <img id="vaseOpen_mobile"   src="assets/img/vase_open.svg"   alt="">
+              <img id="vaseClosed_mobile" src="assets/img/vase_close.svg"  alt="">
+            </div>
+          </section>
+        </div>
+      </div>
     </section>
 
-   <section class="panel about" id="about">
-  <h2 class="about-title">ABOUT</h2>
-  <p class="about-copy">
-THE LTL AFFAIR IS A FILM CIRCULATION PROJECT THAT TAKES FOR EACH EDITION A NEW INDEPENDENT
-FILMMAKER’S WORK AND WEAVES AROUND IT A FULL DAY PROGRAM OF FABULOUS AND RESONANTING FILM WORKS
-FROM OTHER ARTISTS. THE IDEA IS TO FIND NEW CONNECTIONS IN A MULTIPILICITY OF FILM PRACTICES, NEW OLD
-AND SUPPORT THEIR CIRCULATION.
-  </p>
-</section>
-
-    <!-- Blocks injected here -->
-
-    <section class="panel" id="hangout">
-      <h2 class="h2">HANG OUT WITH RADIO VAMPIRO</h2>
-      <p class="sub">After the screenings — music & chat</p>
+    <!-- CARD 2 — first block from data.csv -->
+    <section class="card card-block" id="card-2">
+      <div class="block">
+        <header class="block-head">
+          <div class="block-time" data-slot="time-1">TIME FROM – TO</div>
+        </header>
+        <div class="frame">
+          <div class="film-list" id="films-1"></div>
+        </div>
+      </div>
     </section>
 
-    <section class="panel" id="party">
-      <h2 class="h2">PARTY</h2>
-      <p class="sub">Stay for the music</p>
+    <!-- CARD 3 — second block from data.csv -->
+    <section class="card card-block" id="card-3">
+      <div class="block">
+        <header class="block-head">
+          <div class="block-time" data-slot="time-2">TIME FROM – TO</div>
+        </header>
+        <div class="frame">
+          <div class="film-list" id="films-2"></div>
+        </div>
+      </div>
     </section>
 
-    <footer class="footer">Built from CSV · no admin needed</footer>
-  </div>
-  <div class="err"></div>
+    <!-- CARD 4 — Hangout (no frame, with vase) -->
+    <section class="card card-hang" id="card-4">
+      <div class="hang-wrap">
+        <h2>HANG OUT WITH RADIO VAMPIR0</h2>
+        <p>Music · chat · drinks</p>
+        <div class="vase blink">
+          <img id="vaseOpen_hang"   src="assets/img/vase_open.svg"   alt="">
+          <img id="vaseClosed_hang" src="assets/img/vase_close.svg"  alt="">
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script src="assets/app.js"></script>
 </body>

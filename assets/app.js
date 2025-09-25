@@ -1,171 +1,173 @@
-function slug(s){return String(s||'').toLowerCase().trim().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');}
-function groupBy(arr, key){const m=new Map(); for(const it of arr){const k=it[key]||'Unassigned'; if(!m.has(k)) m.set(k,[]); m.get(k).push(it);} return Array.from(m.entries()).map(([k,v])=>({key:k,items:v}));}
-function pick(row){
-  const get=(cands)=>{for(const c of cands){for(const k in row){if(slug(k)===slug(c)) return row[k];}} return '';}
-  return {
-    block: get(['BLOCK','Block','block']),
-    title: get(['title','name','film_title']),
-    director: get(['director','by']),
-    runtime: get(['runtime','duration']),
-    genre: get(['genre','type']),
-    country: get(['country','origin']),
-    year: get(['year']),
-    time: get(['time','start','start_time']),
-    image: get(['image','img','poster','file','filename','picture','photo']),
-    link: get(['trailer','link','url','website']),
-    music: get(['music','music_by','dj'])
-  };
-}
-function initials(name){
-  const parts = String(name||'').trim().split(/\s+/).slice(0,2);
-  return parts.map(p=>p[0]||'').join('').toUpperCase() || '–';
-}
-function showError(msg){
-  console.error(msg);
-  const e = document.querySelector('.err');
-  e.textContent = msg;
-  e.classList.add('show');
-}
+/* ---------- CSV → objects ---------- */
+const CSV_URL = 'data.csv'; // put data.csv next to index.html
 
-function startBlob() {
-  console.log("startBlob called");
-  const canvas = document.getElementById('bg-blob');
-  const ctx = canvas.getContext('2d');
-  console.log("Canvas size:", canvas.width, canvas.height);
-  
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    console.log("Canvas set to:", canvas.width, canvas.height);
-  }
-  window.addEventListener('resize', resize);
-  resize();
-  
-  let t = 0;
-  function animate() {
-    ctx.fillStyle = "rgba(0, 200, 255, 0.5)";
-    ctx.fill();
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    const cx = canvas.width / 2 + Math.sin(t * 0.5) * 150;
-    const cy = canvas.height / 2 + Math.cos(t * 0.7) * 100;
-    const r = 200 + Math.sin(t * 0.3) * 40; // radius pulses
-    
-    ctx.beginPath();
-    for (let i = 0; i < Math.PI * 2; i += 0.05) {
-      const offset = Math.sin(i * 3 + t) * 20;
-      const x = cx + (r + offset) * Math.cos(i);
-      const y = cy + (r + offset) * Math.sin(i);
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+function parseCSV(text){
+  const rows = [];
+  let i=0, field='', row=[], q=false;
+  const pushF=()=>{ row.push(field); field=''; };
+  const pushR=()=>{ rows.push(row); row=[]; };
+  while(i<text.length){
+    const c=text[i];
+    if(q){
+      if(c === '"'){
+        if(text[i+1] === '"'){ field+='"'; i++; }
+        else { q=false; }
+      } else { field+=c; }
+    } else {
+      if(c === '"'){ q=true; }
+      else if(c === ','){ pushF(); }
+      else if(c === '\n'){ pushF(); pushR(); }
+      else if(c !== '\r'){ field+=c; }
     }
-    ctx.closePath();
-    
-    // gradient fill to look watery
-    const grad = ctx.createRadialGradient(cx, cy, r * 0.2, cx, cy, r);
-    grad.addColorStop(0, "#669bbc"); // blue center
-    grad.addColorStop(1, "rgba(255,255,255,0)"); // fade out
-    ctx.fillStyle = grad;
-    ctx.fill();
-    
-    t += 0.01;
-    requestAnimationFrame(animate);
+    i++;
   }
-  animate();
+  if(field.length || row.length){ pushF(); pushR(); }
+  const header = rows[0].map(h=>h.trim());
+  return rows.slice(1).filter(r=>r.some(v=>(v||'').trim()!=='')).map(r=>{
+    const o={}; header.forEach((h,ix)=> o[h]= (r[ix]||'').trim() ); return o;
+  });
 }
 
-async function boot(){
-  try{
-    const res = await fetch('data.csv', {cache: 'no-store'});
-    if(!res.ok) throw new Error('Failed to load data.csv: ' + res.status + ' ' + res.statusText);
-    const text = await res.text();
-    const parsed = Papa.parse(text, {header:true, skipEmptyLines:true});
-    if (parsed.errors && parsed.errors.length){
-      console.warn('CSV parse warnings:', parsed.errors.slice(0,3));
+/* ---------- Helpers ---------- */
+const imgFromCell = v => !v ? null : /^https?:\/\//i.test(v) ? v : `assets/img/${v}`;
+
+/* ---------- Render blocks ---------- */
+function renderBlock(containerId, films, timeEl){
+  const list = document.getElementById(containerId);
+  if(!list) return;
+
+  // set time label from Block value of first film (or leave default)
+  if(timeEl && films[0] && films[0].Block) timeEl.textContent = films[0].Block;
+
+  list.style.gridTemplateRows = `repeat(${Math.max(films.length,1)}, 1fr)`;
+  list.innerHTML = '';
+
+  (films.length ? films : [{Name:'No films in this block'}]).forEach(f=>{
+    const art = document.createElement('article');
+    art.className = 'film';
+
+    const bgURL = imgFromCell(f.image);
+    if(bgURL){
+      const bg = document.createElement('div');
+      bg.className = 'bg';
+      bg.style.backgroundImage = `url("${bgURL}")`;
+      art.appendChild(bg);
     }
-    let rows = parsed.data.map(pick);
 
-    const groups = groupBy(rows, 'block');
-    const anchor = document.querySelector('#hangout');
-    groups.forEach((g,i) => {
-      const panel = document.createElement('section');
-      panel.className = 'panel';
-      panel.id = 'block-' + (i + 1);  
-      const music = (g.items.map(x=>x.music).filter(Boolean)[0]) || '';
-      panel.innerHTML = `
-        <div class="block-head">
-          <h2 class="block-title">BLOCK ${i+1}${g.key ? ' — ' + g.key : ''}</h2>
-          ${music ? `<div class="block-music">music by ${music}</div>` : ''}
-        </div>
-        <div class="films"></div>
-      `;
-      const films = panel.querySelector('.films');
-      g.items.forEach(d => {
-          const el = document.createElement('div');
-          el.className = 'film';
-          const src = d.image ? "assets/img/" + d.image : "";
-          const img = src
-            ? '<img src="' + src + '" alt="">'
-            : '<div class="ph">' + initials(d.title) + '</div>';
-          el.innerHTML = `
-            <div class="thumb">${img}</div>
-            <div class="film-title">${d.title || 'Untitled'}</div>
-            <div class="film-meta">${d.director || ''}</div>
-            ${d.time ? '<div class="film-time">' + d.time + '</div>' : ''}
-          `;
-          films.appendChild(el);
-        });
-      document.getElementById('wrap').insertBefore(panel, anchor);
-    });
-    setupDotNav();
-  }catch(err){
-    showError('Error: ' + (err && err.message ? err.message : String(err)));
-  }
+    const meta = document.createElement('div');
+    meta.className = 'film-meta';
+
+    const left = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'film-title';
+    title.textContent = f.Name || 'Untitled';
+
+    const sub = document.createElement('div');
+    sub.className = 'film-sub';
+    const runtime = f.Runtime ? ` · ${String(f.Runtime).replace(/\.0$/,'')}’` : '';
+    sub.textContent = `${f.Director || ''}${runtime}`;
+
+    left.appendChild(title);
+    left.appendChild(sub);
+
+    const right = document.createElement('div');
+    if(f.Trailer){
+      const a = document.createElement('a');
+      a.href = f.Trailer; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = 'Trailer';
+      right.appendChild(a);
+    }
+
+    meta.append(left, right);
+    art.appendChild(meta);
+    list.appendChild(art);
+  });
 }
-document.addEventListener('DOMContentLoaded', boot);
-document.addEventListener('DOMContentLoaded', startBlob);
-let dotObserver;
 
-function setupDotNav() {
-  const scroller = document.querySelector('.wrap');      // <-- the scroll container
-  const nav = document.getElementById('dotnav') || (() => {
-    const el = document.createElement('div');
-    el.id = 'dotnav';
-    el.className = 'dotnav';
-    document.body.appendChild(el);
-    return el;
+/* ---------- Blink (hard swap) ---------- */
+function startBlink(openId, closedId){
+  const open = document.getElementById(openId);
+  const closed = document.getElementById(closedId);
+  if(!open || !closed) return;
+  function once(closedMs=160){
+    open.style.display='none'; closed.style.display='block';
+    setTimeout(()=>{ open.style.display='block'; closed.style.display='none'; }, closedMs);
+  }
+  (function loop(){
+    const next = Math.floor(2400 + Math.random()*3600);
+    setTimeout(()=>{ once(150 + Math.floor(Math.random()*80)); loop(); }, next);
   })();
-
-  const panels = Array.from(document.querySelectorAll('.panel'));
-  nav.innerHTML = '';
-
-  panels.forEach(panel => {
-    if (!panel.id) panel.id = 'panel-' + (nav.childElementCount + 1);
-    const btn = document.createElement('button');
-    btn.addEventListener('click', () => {
-      // scroll inside the .wrap container
-      scroller.scrollTo({ top: panel.offsetTop, behavior: 'smooth' });
-    });
-    nav.appendChild(btn);
-  });
-
-  if (dotObserver) dotObserver.disconnect();
-  const dots = nav.querySelectorAll('button');
-
-  dotObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const idx = panels.indexOf(entry.target);
-      dots.forEach(d => d.classList.remove('active'));
-      if (idx >= 0) dots[idx].classList.add('active');
-    });
-  }, {
-    root: scroller,        // <-- key change
-    threshold: 0.6,
-    rootMargin: '0px 0px -10% 0px'
-  });
-
-  panels.forEach(p => dotObserver.observe(p));
 }
-document.addEventListener('DOMContentLoaded', setupDotNav);
+
+/* ---------- Dotnav ---------- */
+function initDots(){
+  const dots = [...document.querySelectorAll('.dotnav .dot')];
+  const sections = [...document.querySelectorAll('.card')];
+
+  const byId = id => dots.find(d=> d.getAttribute('href') === `#${id}`);
+
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && e.intersectionRatio > 0.5){
+        dots.forEach(d=>d.classList.remove('active'));
+        const dot = byId(e.target.id);
+        if(dot) dot.classList.add('active');
+      }
+    });
+  }, { threshold: [0.51] });
+
+  sections.forEach(s=> io.observe(s));
+
+  // smooth scroll
+  dots.forEach(d=> d.addEventListener('click', e=>{
+    e.preventDefault();
+    const id = d.getAttribute('href').slice(1);
+    document.getElementById(id).scrollIntoView({ behavior:'smooth' });
+  }));
+
+  // keyboard arrows
+  document.addEventListener('keydown', e=>{
+    if(e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const idx = sections.findIndex(s => byId(s.id)?.classList.contains('active'));
+    const next = e.key === 'ArrowDown' ? Math.min(idx+1, sections.length-1)
+                                       : Math.max(idx-1, 0);
+    sections[next].scrollIntoView({ behavior:'smooth' });
+  });
+}
+
+/* ---------- Init ---------- */
+async function init(){
+  // CSV
+  try{
+    const res = await fetch('data.csv');
+    const text = await res.text();
+    const films = parseCSV(text);
+
+    // group by Block (label) and keep order
+    const byBlock = {};
+    films.forEach(f => {
+      const k = (f.Block || 'Block').trim();
+      (byBlock[k] ||= []).push(f);
+    });
+    const blocks = Object.keys(byBlock);
+
+    // Fill card 2 and 3 with first two blocks
+    renderBlock('films-1', byBlock[blocks[0]] || [], document.querySelector('[data-slot="time-1"]'));
+    renderBlock('films-2', byBlock[blocks[1]] || [], document.querySelector('[data-slot="time-2"]'));
+  }catch(err){
+    console.error('data.csv load error', err);
+    document.getElementById('films-1').innerHTML =
+      '<div class="film"><div class="film-meta"><div class="film-title">Could not load data.csv</div></div></div>';
+  }
+
+  // Blink vases
+  startBlink('vaseOpen_desktop', 'vaseClosed_desktop');
+  startBlink('vaseOpen_mobile',  'vaseClosed_mobile');
+  startBlink('vaseOpen_hang',    'vaseClosed_hang');
+
+  // Dots
+  initDots();
+}
+
+init();

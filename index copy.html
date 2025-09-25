@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SHORT TIME FILM AFFAIR</title>
+<style>
+  :root{
+    --paper:#f5f1ea;
+    --ink:#111;
+    --frame:22px;
+    --gap:clamp(16px,3vw,40px);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper);
+    min-height:100svh; display:grid; place-items:center;
+  }
+  .wrap{ width:min(1100px,94vw); padding:clamp(10px,2vw,20px); }
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap:var(--gap); align-items:center;
+    position:relative;
+  }
+
+  /* vase desktop */
+  .vase{
+    position:relative;
+    width:min(360px,32vw);
+    aspect-ratio:242.37/494.42;
+  }
+  .vase img{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #vaseOpen{ display:block; }
+  #vaseClosed{ display:none; }
+
+  .vaseOverlap{ display:none; }
+
+  /* text frame */
+  .titleFrame{
+    position:relative;
+    border:var(--frame) solid var(--ink);
+    padding:clamp(18px,2.2vw,28px);
+    background:var(--paper);
+    display:flex;
+  flex-direction:column;
+  justify-content:space-between; /* pushes top/bottom text apart */
+  text-align:right;              /* aligns texts and title to the right */
+  }
+
+
+  .title{
+    display:grid; gap:clamp(8px,1.4vw,16px);
+    font:900 clamp(44px,8.8vw,120px)/1.02 Montserrat, Futura, system-ui, sans-serif;
+    color:var(--ink); letter-spacing:.3px;
+  }
+
+.frameTop, .frameBottom{
+  position: absolute;
+  right: 0;                          /* align to right edge */
+  font:300 clamp(12px, 2.2vw, 18px)/1.2 Montserrat, Futura, system-ui, sans-serif;
+  letter-spacing:.06em;
+  color:var(--ink);
+}
+.frameTop{
+  bottom: 110%;                      /* sit just above the frame */
+  margin-bottom: .4em;               /* space between text and frame */
+}
+.frameBottom{
+  top: 110%;                         /* sit just below the frame */
+  margin-top: .4em;                  /* space between text and frame */
+}
+
+.title{
+  position:relative;
+  font:900 clamp(60px,14vw,100px)/.95 Montserrat, Futura, system-ui, sans-serif;
+  letter-spacing:.2px;
+  text-align:right;
+  z-index:10;
+}
+
+
+  /* --- Mobile --- */
+  @media (max-width: 720px){
+  :root{
+    --frame:14px;  /* thinner frame only on mobile */
+  }
+  .grid{ grid-template-columns:1fr; }
+
+  /* hide desktop vase */
+  .vase{ display:none; }
+
+  .titleFrame{
+    padding: clamp(20px,2vw,100px);
+    position:relative;
+    margin-top:var(--gap); 
+    /* push the text away from the vase on the left */
+  }
+
+  /* draw the frame as a layer so we can cut a notch under the vase */
+  .titleFrame::before{
+    content:"";
+    position:absolute; inset:0;
+    border:10px; solid var(--ink);
+    pointer-events:none;
+    z-index:1;                 /* frame layer */
+  }
+  /* cutout that hides frame behind the vase (same color as background) */
+ .titleFrame::after{
+    content:"";
+    position:absolute;
+    left:-10%;           /* same as .vaseOverlap left */
+    bottom:-30%;         /* same as .vaseOverlap bottom */
+    width:30%;           /* same as .vaseOverlap width */
+    height:60%;          /* tall enough for stems */
+    background:var(--paper);
+    z-index:1;           /* above frame, below vase */
+  }
+
+  /* bigger title and shifted right */
+  .title{
+    position: relative;
+    font:900 clamp(70px, 14vw, 100px)/.95 Montserrat, Futura, system-ui, sans-serif;
+    letter-spacing:.2px;
+    text-align: right;
+     z-index:10;
+  }
+
+  /* vase overlapping the frame, *above* the cutout */
+  .vaseOverlap{
+    display:block;
+    position:absolute;
+    left:-8%; bottom:-30%;    /* your values */
+    width:30%; max-width:200px;
+    aspect-ratio:242.37/494.42;
+    z-index:2;                 /* above the frame and cutout */
+    pointer-events:none;
+  }
+  .vaseOverlap img{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #vaseOpen_m{ display:block; z-index:10;}
+  #vaseClosed_m{ display:none; z-index:10;}
+}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="grid">
+
+      <!-- desktop vase -->
+       <div class="vase" aria-hidden="true">
+        <img id="vaseOpen"   src="assets/img/vase_open.svg"   alt="">
+        <img id="vaseClosed" src="assets/img/vase_close.svg"  alt="">
+      </div> 
+
+      <!-- frame with title -->
+
+    <section class="titleFrame" aria-label="LONG TIME FILM AFFAIR">
+      <!-- top text -->
+      <div class="frameTop">SATURDAY, OCT. 25</div>
+     
+        <div class="title">
+          <div>LONG</div>
+          <div>TIME</div>
+          <div>FILM</div>
+          <div>AFFAIR</div>
+        </div>
+          <!-- bottom text -->
+        <div class="frameBottom">ACKERSTRASSE 9 · 10115 BERLIN</br>VILLA KUNTERBUNT</div>
+
+        <!-- mobile overlapping vase -->
+        <div class="vaseOverlap" aria-hidden="true">
+          <img id="vaseOpen_m"   src="assets/img/vase_open.svg"   alt="">
+          <img id="vaseClosed_m" src="assets/img/vase_close.svg"  alt="">
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+  const pairs = [
+    [document.getElementById('vaseOpen'),  document.getElementById('vaseClosed')],
+    [document.getElementById('vaseOpen_m'),document.getElementById('vaseClosed_m')]
+  ];
+
+  function blinkPair([openEl, closedEl], closedMs=160){
+    if(!openEl || !closedEl) return;
+    openEl.style.display='none';
+    closedEl.style.display='block';
+    setTimeout(()=>{
+      openEl.style.display='block';
+      closedEl.style.display='none';
+    }, closedMs);
+  }
+
+  function scheduleBlink(){
+    const delay = Math.floor(2400 + Math.random()*3600);
+    setTimeout(()=>{
+      pairs.forEach(p=>blinkPair(p, 150 + Math.floor(Math.random()*70)));
+      scheduleBlink();
+    }, delay);
+  }
+  scheduleBlink();
+</script>
+</body>
+</html>
