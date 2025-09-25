@@ -186,13 +186,18 @@ init();
       'CALSCALE:GREGORIAN',
       'METHOD:PUBLISH',
       'BEGIN:VEVENT',
-      `UID:ltfa-20251025@ltfa`,
+      'UID:ltfa-20251025@ltfa',
       `DTSTAMP:${toStamp(new Date())}`,
       'DTSTART;TZID=Europe/Berlin:20251025T140000',
       'DTEND;TZID=Europe/Berlin:20251025T220000',
       'SUMMARY:LTFA — Screening Day',
       'LOCATION:Ackerstrasse 9, 10115 Berlin',
       'DESCRIPTION:Films, music, conversation, and drinks.',
+      'BEGIN:VALARM',
+      'ACTION:DISPLAY',
+      'DESCRIPTION:Reminder',
+      'TRIGGER:-P2D',             // 2 days before start
+      'END:VALARM',
       'END:VEVENT',
       'END:VCALENDAR'
     ].join('\r\n');
