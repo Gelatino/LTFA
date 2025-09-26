@@ -46,6 +46,11 @@ function renderBlock(containerId, films, timeEl){
     const art = document.createElement('article');
     art.className = 'film';
 
+    // >>> open modal when clicking this film
+    art.addEventListener('click', ()=> {
+      if(f && f.Name) openFilmModal(f);
+    });
+
     const bgURL = imgFromCell(f.image);
     if(bgURL){
       const bg = document.createElement('div');
@@ -70,13 +75,8 @@ function renderBlock(containerId, films, timeEl){
     left.appendChild(title);
     left.appendChild(sub);
 
-    const right = document.createElement('div');
-    if(f.Trailer){
-      const a = document.createElement('a');
-      a.href = f.Trailer; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = 'Trailer';
-      right.appendChild(a);
-    }
+  // right column now stays empty — no trailer link
+  const right = document.createElement('div');
 
     meta.append(left, right);
     art.appendChild(meta);
@@ -161,6 +161,8 @@ async function init(){
       '<div class="film"><div class="film-meta"><div class="film-title">Could not load data.csv</div></div></div>';
   }
 
+  setupFilmModal();
+
   // Blink vases
   startBlink('vaseOpen_desktop', 'vaseClosed_desktop');
   startBlink('vaseOpen_mobile',  'vaseClosed_mobile');
@@ -224,3 +226,75 @@ init();
     );
   }
 })();
+
+
+// --- Modal helpers ---
+const FilmModal = {
+  el: null,
+  ui: {}
+};
+function setupFilmModal(){
+  FilmModal.el = document.getElementById('filmModal');
+  if(!FilmModal.el) return;
+  FilmModal.ui = {
+    card:   FilmModal.el.querySelector('.modal-card'),
+    close:  FilmModal.el.querySelector('.modal-close'),
+    media:  FilmModal.el.querySelector('.modal-media'),
+    title:  FilmModal.el.querySelector('.modal-title'),
+    meta:   FilmModal.el.querySelector('.modal-meta'),
+    sin:    FilmModal.el.querySelector('.modal-sinopsis'),
+    link:   FilmModal.el.querySelector('.modal-trailer'),
+    backdrop: FilmModal.el.querySelector('.modal-backdrop')
+  };
+
+  const close = ()=> closeFilmModal();
+  FilmModal.ui.close.addEventListener('click', close);
+  FilmModal.ui.backdrop.addEventListener('click', close);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+}
+
+function openFilmModal(f){
+  if(!FilmModal.el) return;
+  // title
+  FilmModal.ui.title.textContent = f.Name || 'Untitled';
+
+  // meta (Director · Country · Runtime)
+  const bits = [];
+  if(f.Director) bits.push(`Director: ${f.Director}`);
+  if(f.Country)  bits.push(`Country: ${f.Country}`);
+  if(f.Runtime)  bits.push(`Runtime: ${String(f.Runtime).replace(/\.0$/,'')}’`);
+  FilmModal.ui.meta.textContent = bits.join(' · ');
+
+  // sinopsis
+  FilmModal.ui.sin.textContent = f.Sinopsis || '';
+
+  // trailer link
+  if(f.Trailer){
+    FilmModal.ui.link.href = f.Trailer;
+    FilmModal.ui.link.hidden = false;
+  } else {
+    FilmModal.ui.link.removeAttribute('href');
+    FilmModal.ui.link.hidden = true;
+  }
+
+  // poster/cover (use your existing `image` column)
+  const bgURL = imgFromCell(f.image);
+  if(bgURL){
+    FilmModal.ui.media.style.backgroundImage = `url("${bgURL}")`;
+    FilmModal.ui.media.hidden = false;
+  } else {
+    FilmModal.ui.media.hidden = true;
+  }
+
+  FilmModal.el.classList.add('show');
+  FilmModal.el.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+}
+
+function closeFilmModal(){
+  if(!FilmModal.el) return;
+  FilmModal.el.classList.remove('show');
+  FilmModal.el.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+}
+// --- end modal helpers ---

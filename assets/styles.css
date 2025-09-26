@@ -141,7 +141,7 @@ body{
 }
 .film .bg{
   position:absolute; inset:0; background-size:cover; background-position:center;
-  opacity:.80;
+  opacity:.60;
 }
 .film-meta{
   position:relative; width:100%;
@@ -160,6 +160,29 @@ body{
 .card-hang .vase{ width:min(150px,42vw); margin-inline:auto; }
 #vaseOpen_hang{ display:block; }
 #vaseClosed_hang{ display:none; }
+
+/* ===== Modal Cards tweaks ===== */
+
+.modal{ position:fixed; inset:0; display:none; z-index:9999; }
+.modal.show{ display:block; }
+.modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(2px); }
+.modal-card{
+  position:relative; max-width:760px; margin:7vh auto; background:#fff; color:#111;
+  padding:24px 24px 28px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+.modal-close{ position:absolute; top:8px; right:10px; border:0; background:transparent; font-size:26px; cursor:pointer; }
+.modal-title{ margin:0 0 .35em; font-size:1.6rem; }
+.modal-meta{ margin:.2em 0 1em; color:#555; font-size:.975rem; }
+.modal-sinopsis{ margin:0 0 1rem; line-height:1.5; }
+.modal-trailer{ display:inline-block; text-decoration:underline; }
+.modal-media{ margin: -8px -8px 12px; aspect-ratio:16/9; background:#eee center/cover no-repeat; border-radius:8px; }
+body.modal-open{ overflow:hidden; }
+
+/* Make film tiles clickable affordance (optional) */
+.film{ cursor:pointer; }
+.film a{ pointer-events:auto; } /* links inside still work */
+
+
 
 /* ===== Mobile tweaks ===== */
 @media (max-width:720px){
@@ -183,7 +206,7 @@ body{
   /* hide border under the vase with a cutout */
   .card-hero .titleFrame::after{
     content:""; position:absolute;
-    left:-10%; bottom:-30%;
+    left:-10%; bottom:-45%;
     width:30%; height:80%;
     background:var(--paper); z-index:2; /* over border, under vase */
   }
