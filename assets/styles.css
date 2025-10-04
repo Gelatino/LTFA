@@ -1,9 +1,11 @@
 :root{
   --paper:#f5f1ea;
   --ink:#111;
+  --pink:#DC0073;
+  --gold:#DAA520;
   --frame:18px;                 /* frame thickness */
   --gap:clamp(16px,3vw,40px);
-  --blue:#003153;
+  --blue:#2274A5;
 }
 
 *{ box-sizing:border-box; }
@@ -56,7 +58,17 @@ body{
 }
 .titleFrame::before{
   content:""; position:absolute; inset:0;
-  border:var(--frame) solid var(--ink); z-index:0;
+  border: var(--frame) solid var(--ink);
+}
+
+.titleFrame::after {
+  content:"";
+  position:absolute;
+  inset:var(--frame);
+  border-top:5px solid var(--gold);
+  border-left:5px solid var(--gold);
+  z-index:1;
+  pointer-events: none;
 }
 
 /* Title block */
@@ -74,8 +86,8 @@ body{
   font:300 clamp(12px,2.2vw,18px)/1.2 Montserrat, Futura, system-ui, sans-serif;
   letter-spacing:.06em;
 }
-.frameTop{ bottom:100%; margin-bottom:.4em; left:5%}
-.frameBottom{ top:100%; margin-top:.4em; }
+.frameTop{ bottom:100%; margin-bottom:.4em; left:5%; color:var(--pink);}
+.frameBottom{ top:100%; margin-top:.4em;color:var(--pink); }
 
 /* Mobile overlapping vase (hidden on desktop) */
 .vaseOverlap{ display:none; }
@@ -118,6 +130,18 @@ body{
 .btn-ical:active{ transform:translateY(1px); }
 .panel.about .btn-ical{ margin-top:1rem; }
 
+/* pink button */
+.btn-pink{
+  background:#DC0073; /* Mexican pink */
+  color:#fff;
+}
+.btn-row{
+  display:flex;
+  gap:5rem;          /* try 2rem or even 3rem */
+  margin-top:1rem;
+  flex-wrap:wrap;
+}
+
 
 /* ===== BLOCK CARDS (2 & 3) ===== */
 .block{ width:min(1100px,94vw); margin-inline:auto; }
@@ -129,6 +153,14 @@ body{
   border:var(--frame) solid var(--ink);
   background:var(--paper);
   padding: clamp(8px,1.2vw,14px);
+}
+.frame::after {
+  content:"";
+  position:absolute;
+  inset:0px;
+  border-top:5px solid var(--gold);
+  border-left:5px solid var(--gold);
+  z-index:1;
 }
 
 .film-list{ display:grid; gap:clamp(8px,1.2vw,12px); }
@@ -203,13 +235,25 @@ body.modal-open{ overflow:hidden; }
     z-index:3; pointer-events:none;
   }
 
-  /* hide border under the vase with a cutout */
-  .card-hero .titleFrame::after{
-    content:""; position:absolute;
-    left:-10%; bottom:-45%;
-    width:30%; height:80%;
-    background:var(--paper); z-index:2; /* over border, under vase */
-  }
+
+
+.title::before {
+  content: "";
+  position: absolute;
+  /* Position and size it to cover the border behind the vase */
+  left: -12%;
+  bottom: -45%;
+  width: 32%;
+  height: 80%;
+  background: var(--paper);
+  /* This z-index places it ON TOP of the borders, but BELOW the vase */
+  z-index: 2;
+}
+
+.btn-row{
+  gap:2rem;          /* try 2rem or even 3rem */
+}
+
 
   /* keep labels readable */
   .frameTop,.frameBottom{
