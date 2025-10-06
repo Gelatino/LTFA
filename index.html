@@ -51,6 +51,8 @@
       </div>
     </section>  
 
+
+
    <section class="panel about" id="about">
 
     <div class="card" id="card-2">
@@ -63,10 +65,21 @@
         the new friends, the talking, the images, and all the eyes.
       </p>
 
-      <div class="btn-row">
-        <button class="btn-ical">ADD TO CALENDAR</button>
-        <button class="btn-ical btn-pink">GET TICKETS</button>
-      </div>
+    <div class="btn-row">
+  <div class="cal-wrap">
+    <button id="addCal" class="btn-ical">Add to calendar</button>
+
+    <!-- tiny sheet -->
+    <div id="calSheet" class="cal-sheet" hidden>
+      <button data-cal="apple">Apple Calendar</button>
+      <button data-cal="google">Google Calendar</button>
+      <button data-cal="outlook">Outlook</button>
+      <button class="cancel">Cancel</button>
+    </div>
+  </div>
+
+  <button class="btn-ical btn-pink" href="https://buytickets.at/miaumiau/1896252">Get tickets</button>
+</div>
     </div>
   </section>
 

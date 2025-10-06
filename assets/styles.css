@@ -146,6 +146,34 @@ body{
 }
 
 
+.cal-wrap{ position:relative; display:inline-block; }
+.cal-sheet{
+  position:absolute; inset:auto 0 100% auto; /* sits above on mobile, tweak if needed */
+  transform:translateY(8px);
+  background:#fff; border:1px solid #ddd; border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  display:none; /* <--- THIS IS THE PROBLEM */
+  flex-direction:column; min-width:220px; overflow:hidden;
+  z-index:40;
+}
+.cal-sheet button{
+  appearance:none; border:0; background:#fff; padding:14px 16px;
+  text-align:left; font:inherit; cursor:pointer;
+}
+.cal-sheet button:hover{ background:#f6f6f6; }
+.cal-sheet .cancel{ color:#666; border-top:1px solid #eee; }
+
+.cal-sheet{ outline:2px dashed #333; }
+
+
+.cal-sheet[hidden] {
+    display: none; 
+}
+
+/* The element must display flex when the hidden attribute is removed */
+.cal-sheet:not([hidden]) {
+    display: flex;
+}
 /* ===== BLOCK CARDS (2 & 3) ===== */
 .block{ width:min(1100px,94vw); margin-inline:auto; }
 .block-head{ width:100%; display:flex; justify-content:flex-start; margin-bottom:clamp(12px,2vw,20px); }
@@ -214,7 +242,11 @@ body{
 .modal-sinopsis{ margin:0 0 1rem; line-height:1.5; }
 .modal-trailer{ display:inline-block; text-decoration:underline; }
 .modal-media{ margin: -8px -8px 12px; aspect-ratio:16/9; background:#eee center/cover no-repeat; border-radius:8px; }
-body.modal-open{ overflow:hidden; }
+html.modal-open .cards,
+body.modal-open .cards {
+  /* Prevent the inner scroll container from scrolling when modal is open */
+  overflow: hidden !important; 
+}
 
 /* Make film tiles clickable affordance (optional) */
 .film{ cursor:pointer; }
@@ -234,6 +266,20 @@ body.modal-open{ overflow:hidden; }
   .dotnav .dot{
   width:8px; height:8px;
   }
+
+
+.cal-sheet{ 
+    /* The key is setting it to fixed and ensuring it starts at the bottom */
+    position:fixed; 
+    left:0; 
+    right:0; 
+    bottom:0;  /* Set to 0 to anchor it to the bottom edge */
+    top:auto;  /* Ensure it doesn't take full height */
+    transform:none; 
+    border-radius:16px 16px 0 0; /* Keep the nice rounded top corners */
+    margin:0;  /* Remove any default margin */
+  }
+
 
  /* hide the desktop vase on mobile */
 .vase{ display:none; }

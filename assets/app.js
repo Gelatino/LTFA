@@ -176,57 +176,6 @@ async function init(){
 init();
 
 
-(function(){
-  const btn = document.getElementById('addToCalendar');
-  if(!btn) return;
-
-  btn.addEventListener('click', () => {
-    // Event: SATURDAY, OCT. 25, 2025 — 14:00–22:00 (Berlin)
-    const ICS = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//LTFA//EN',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      'UID:ltfa-20251025@ltfa',
-      `DTSTAMP:${toStamp(new Date())}`,
-      'DTSTART;TZID=Europe/Berlin:20251025T140000',
-      'DTEND;TZID=Europe/Berlin:20251025T220000',
-      'SUMMARY:LTFA — Screening Day',
-      'LOCATION:Ackerstrasse 9, 10115 Berlin',
-      'DESCRIPTION:Films, music, conversation, and drinks.',
-      'BEGIN:VALARM',
-      'ACTION:DISPLAY',
-      'DESCRIPTION:Reminder',
-      'TRIGGER:-P2D',             // 2 days before start
-      'END:VALARM',
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-
-    const blob = new Blob([ICS], {type:'text/calendar;charset=utf-8'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'LTFA-2025-10-25.ics';
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(a.href);
-    a.remove();
-  });
-
-  function toStamp(d){
-    const pad = n => String(n).padStart(2,'0');
-    return (
-      d.getUTCFullYear() +
-      pad(d.getUTCMonth()+1) +
-      pad(d.getUTCDate()) + 'T' +
-      pad(d.getUTCHours()) +
-      pad(d.getUTCMinutes()) +
-      pad(d.getUTCSeconds()) + 'Z'
-    );
-  }
-})();
 
 
 // --- Modal helpers ---
@@ -290,7 +239,9 @@ function openFilmModal(f){
 
   FilmModal.el.classList.add('show');
   FilmModal.el.setAttribute('aria-hidden','false');
+
   document.body.classList.add('modal-open');
+  document.documentElement.classList.add('modal-open'); // document.documentElement is <html>
 }
 
 function closeFilmModal(){
@@ -298,5 +249,93 @@ function closeFilmModal(){
   FilmModal.el.classList.remove('show');
   FilmModal.el.setAttribute('aria-hidden','true');
   document.body.classList.remove('modal-open');
+  document.documentElement.classList.remove('modal-open');
 }
 // --- end modal helpers ---
+
+
+
+(function calendarChooser(){
+  const btn = document.getElementById('addCal');
+  const sheet = document.getElementById('calSheet');
+  if(!btn || !sheet) return; // HTML not on this page
+
+  // Event details
+  const tz = 'Europe/Berlin';
+  const title = 'LTFA — Screening Day';
+  const eventLocation = 'Ackerstrasse 9, 10115 Berlin'; // <- renamed
+  const details = 'Films, music, conversation, and drinks.';
+
+  // 25 Oct 2025, 17:30–22:00 Berlin (UTC+2)
+  const startUTC = '20251025T153000Z';
+  const endUTC   = '20251025T200000Z';
+  const enc = encodeURIComponent;
+
+  // Links
+  const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE`
+    + `&text=${enc(title)}&dates=${startUTC}/${endUTC}`
+    + `&details=${enc(details)}&location=${enc(eventLocation)}&ctz=${enc(tz)}`;
+
+  const outlook = `https://outlook.live.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent`
+    + `&subject=${enc(title)}&startdt=2025-10-25T17:30:00+02:00&enddt=2025-10-25T22:00:00+02:00`
+    + `&body=${enc(details)}&location=${enc(eventLocation)}`;
+
+  // Apple Calendar via webcal:// (use the actual host)
+  const host = (window.location && window.location.host) ? window.location.host : 'ltfa.miaumiau.mov';
+  const apple = `webcal://${host}/assets/ltfa.ics`;
+
+  const openCal = kind => {
+    const href = kind === 'apple' ? apple : kind === 'google' ? gcal : outlook;
+    if(kind === 'apple') window.location.href = href;  // iOS needs direct nav
+    else window.open(href, '_blank', 'noopener');
+  };
+
+  // Reorder choices by platform (nice-to-have)
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+  if(isIOS){
+    const b = sheet.querySelector('[data-cal="apple"]');
+    if(b) sheet.prepend(b);
+  }else if(isAndroid){
+    const b = sheet.querySelector('[data-cal="google"]');
+    if(b) sheet.prepend(b);
+  }
+
+  // Toggle sheet
+  const toggle = show => {
+    sheet.hidden = !show;
+    // const lock = window.matchMedia('(max-width:700px)').matches;
+    // document.body.style.overflow = show && lock ? 'hidden' : '';
+  };
+
+  btn.addEventListener('click', () => toggle(sheet.hidden));
+
+  // Click handlers
+  sheet.addEventListener('click', e=>{
+    const t = e.target.closest('button'); if(!t) return;
+    if(t.classList.contains('cancel')) return toggle(false);
+    const kind = t.getAttribute('data-cal');
+    if(kind) openCal(kind);
+    toggle(false);
+  });
+
+  // Click outside to close
+  document.addEventListener('click', e=>{
+    if(sheet.hidden) return;
+    if(!e.target.closest('.cal-wrap') && !e.target.closest('.cal-sheet')) toggle(false);
+  });
+})();
+
+
+function initGetTickets() {
+  const btn = document.querySelector('.btn-ical.btn-pink');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    window.open('https://buytickets.at/miaumiau/1896252', '_blank', 'noopener');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initGetTickets();
+});
