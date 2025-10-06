@@ -48,6 +48,7 @@ function renderBlock(containerId, films, timeEl){
 
     // >>> open modal when clicking this film
     art.addEventListener('click', ()=> {
+      console.log('film entry', f);
       if(f && f.Name) openFilmModal(f);
     });
 
@@ -254,6 +255,7 @@ function setupFilmModal(){
 }
 
 function openFilmModal(f){
+  console.log('opening')
   if(!FilmModal.el) return;
   // title
   FilmModal.ui.title.textContent = f.Name || 'Untitled';
