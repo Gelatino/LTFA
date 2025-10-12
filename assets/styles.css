@@ -27,6 +27,39 @@ body{
   padding: clamp(8px, 3vw, 32px);
 }
 
+.card[data-ref="TITLE"] {
+  position: relative; /* gives a local coordinate system */
+  overflow: hidden;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: Futura, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  color: #E4007F; /* accent pink */
+  opacity: 0;
+  animation: appear 1.5s ease-out 1.5s forwards, float 2.5s ease-in-out 3s infinite;
+}
+
+.scroll-hint .arrow {
+  font-size: 1.2rem;
+  line-height: 1;
+  margin-top: 0.3rem;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.8; }
+  50% { transform: translate(-50%, 6px); opacity: 1; }
+}
 
 /* ===== Dotnav ===== */
 .dotnav{
@@ -101,48 +134,89 @@ body{
 /* ===== BLOCK CARDS ABOUT ===== */
 /* Tighten the ABOUT panel */
 
-.panel.about{
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start; /* no space-between */
-  gap:.5rem;
-}
-.panel.about .about-title{
-  font-size: 2rem;
-  margin: 0 0 .5em;
+
+.card[data-ref="ABOUT"] .about-wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 1.6;
+  padding: 4rem 2rem;
 }
 
-.panel.about .about-copy{
-  font-size: 1.5rem;
-  margin: 0;              /* no default p margins */
-  line-height: 1.45;
-  max-width: 60ch;        /* readable line length */
+.card[data-ref="ABOUT"] h2 {
+  font-size: 3rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
 }
 
-.panel.about .about-copy + .about-copy{
-  margin-top: .35em;      /* small gap only between paragraphs */
+.card[data-ref="ABOUT"] .underline {
+  width: 80px;
+  height: 3px;
+  background: var(--gold);
+  margin: 0.8rem auto 2rem;
+}
+
+.card[data-ref="ABOUT"] p {
+  font-size: clamp(1.3rem, 2vw + 0.5rem, 2rem);
+  text-align: justify;
+  text-align-last: center;
+  margin-bottom: 1.4rem;
+  color: #111;
 }
 
 
-.btn-ical{
-  appearance:none; border:0; cursor:pointer;
-  background:#000; color:#fff;
-  padding:.75rem 1rem; font-weight:600; letter-spacing:.02em;
-  border-radius:6px; line-height:1; 
-}
-.btn-ical:active{ transform:translateY(1px); }
-.panel.about .btn-ical{ margin-top:1rem; }
 
-/* pink button */
-.btn-pink{
-  background:#DC0073; /* Mexican pink */
-  color:#fff;
+/* Reset native button styles to match links */
+.btn-ical,
+.btn-ical.btn-pink {
+  all: unset;                  /* remove all browser defaults */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border-radius: 40px;
+  padding: 0.9rem 2rem;
+  cursor: pointer;
+  border: none;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
-.btn-row{
-  display:flex;
-  gap:5rem;          /* try 2rem or even 3rem */
-  margin-top:1rem;
-  flex-wrap:wrap;
+
+/* Black button */
+.btn-ical {
+  background: #000;
+  color: #fff;
+}
+
+/* Pink button */
+.btn-ical.btn-pink {
+  background: var(--pink);
+  color: #fff;
+}
+
+/* Hover effects */
+.btn-ical:hover {
+  background: var(--pink);
+  transform: scale(1.05);
+}
+.btn-ical.btn-pink:hover {
+  background: #000;
+  transform: scale(1.05);
+}
+
+
+.pink-line {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 1.4rem;
+  color: var(--pink);
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 
@@ -221,7 +295,7 @@ body{
 /* ===== HANG (Card 4) ===== */
 .card-hang{ text-align:center; }
 .hang-wrap h2{ font-weight:900; font-size:clamp(36px,8vw,84px); line-height:1.02; margin:0 0 8px 0; }
-.hang-wrap p{ margin:0 0 26px 0; font-weight:300; letter-spacing:.06em; font-size:clamp(14px,2.6vw,18px); }
+.hang-wrap p{text-align: center;  margin:0 0 26px 0; font-weight:300; letter-spacing:.06em; font-size:clamp(16px,2.6vw,25px); }
 
 .card-hang .vase{ width:min(150px,42vw); margin-inline:auto; }
 #vaseOpen_hang{ display:block; }
@@ -251,6 +325,98 @@ body.modal-open .cards {
 /* Make film tiles clickable affordance (optional) */
 .film{ cursor:pointer; }
 .film a{ pointer-events:auto; } /* links inside still work */
+
+
+/*Social Links*/
+.rv-stack{
+  margin-top: 1.5rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2.2rem;        /* vertical rhythm */
+}
+
+
+/* icons row */
+.rv-icons{
+  display:flex;
+  gap:2.4rem;       /* space between the two circles */
+}
+.rv-icons a{
+  display:inline-flex;
+  align-items:center; justify-content:center;
+  width:80px; height:80px; border-radius:50%;
+  background:var(--paper); border:7px solid var(--pink);
+  transition:transform .18s ease, background .18s ease, border-color .18s ease;
+}
+.rv-icons a:hover{ background:var(--pink); border-color:#000; transform:scale(1.05); }
+.rv-icons img{ width:50px; height:50px; object-fit:contain; }
+
+/* vase as a small “signature” */
+.rv-vase{ width:86px; height:auto; filter:drop-shadow(0 3px 6px rgba(0,0,0,.15)); opacity:.95; }
+
+/* optional: tighten subtitle */
+.card h2 + .sub{ margin-top:.2rem; opacity:.9; }
+
+
+
+/*JOIN US CARD*/
+.underline {
+  width: 80px;
+  height: 3px;
+  background: var(--gold);
+  margin: 0.8rem auto 2rem;
+}
+
+/* JOIN US section */
+.card[data-ref="JOINUS"] .hang-wrap{
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 1.6;
+  padding: 4rem 2rem;
+}
+
+/* make paragraphs more readable and balanced */
+.card[data-ref="JOINUS"] p{
+  font-size: clamp(1rem, 2vw + 0.5rem, 1.6rem);
+  text-align: justify;
+  text-align-last: center; /* keeps the last line centered */
+  margin-bottom: 1.4rem;
+  color: #111;
+}
+
+/* optional: give the last line a slightly warmer tone */
+.card[data-ref="JOINUS"] p:last-of-type {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--pink);
+  margin-bottom: 2rem;
+}
+
+/* the title */
+.card[data-ref="JOINUS"] h2 {
+  font-size: 3rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+/* the button */
+.card[data-ref="JOINUS"] .btn-ical.btn-pink {
+  margin-top: 1.5rem;
+  background: var(--pink);
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  padding: 0.9rem 2rem;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.card[data-ref="JOINUS"] .btn-ical.btn-pink:hover {
+  background: #000;
+  transform: scale(1.05);
+}
 
 
 
@@ -316,11 +482,13 @@ body.modal-open .cards {
   /* This z-index places it ON TOP of the borders, but BELOW the vase */
   z-index: 2;
 }
-
-.btn-row{
-  gap:2rem;          /* try 2rem or even 3rem */
+ .btn-row { display: block; text-align: center; }
+  .btn-row .cal-wrap,
+  .btn-row .btn-ical { display: inline-block; width: min(420px, 60vw); }
+  .btn-row .cal-wrap { margin-bottom: 16px; }  /* vertical space */
+.btn-ical:active {
+  transform: scale(1.05);
 }
-
   .frame {width: 98%}
   /* keep labels readable */
   .frameTop,.frameBottom{
