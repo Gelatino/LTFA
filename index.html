@@ -1,153 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LONG TIME FILM AFFAIR</title>
-  <link rel="stylesheet" href="assets/styles.css" />
-  
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDXSLTCWTK"></script>
-  <script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LONG TIME FILM AFFAIR</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LDXSLTCWTK"></script>
+    <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-  
+
     gtag('config', 'G-LDXSLTCWTK');
-  </script>
-
-
-  
+    </script>
 </head>
+
 <body>
-
-  <!-- Dot navigation -->
-  <nav class="dotnav" aria-label="Section navigation">
-    <a href="#card-1" aria-label="Hero"      class="dot active"></a>
-    <a href="#card-2" aria-label="Block 1"   class="dot"></a>
-    <a href="#card-3" aria-label="Block 2"   class="dot"></a>
-    <a href="#card-4" aria-label="Hangout"   class="dot"></a>
-  </nav>
-
-  <main class="cards">
-    <!-- CARD 1 — your current hero (kept as before) -->
-    <section class="card card-hero" id="card-1">
-      <div class="wrap">
-        <div class="grid">
-          <!-- Left: desktop vase -->
-          <div class="vase" aria-hidden="true">
-            <img id="vaseOpen_desktop"   src="assets/img/vase_open.svg"   alt="">
-            <img id="vaseClosed_desktop" src="assets/img/vase_close.svg"  alt="">
-          </div>
-
-          <!-- Right: frame that hugs the title -->
-          <section class="titleFrame" aria-label="LONG TIME FILM AFFAIR">
-            <!-- Labels OUTSIDE the frame (top/bottom, thin) -->
-            <div class="frameTop">SATURDAY, OCT. 25</div>
-
-            <div class="title">
-              <div>LONG</div>
-              <div>TIME</div>
-              <span style="color:#DC0073;">FILM</span>
-              <div>AFFAIR</div>
+    <main id="cards" class="cards">
+        <section class="card" data-type="section" data-ref="TITLE"></section>
+        <section class="card" data-type="section" data-ref="ABOUT"></section>
+        <section class="card card-block" data-type="block" data-block="1" data-title="17:30–18:30"></section>
+        <section class="card" data-type="section" data-ref="DESERTKIN"></section>
+        <section class="card card-block" data-type="block" data-block="2" data-title="19:00–20:00"></section>
+        <section class="card" data-type="section" data-ref="RADIOVAMPIRO"></section>
+        <section class="card card-block" data-type="block" data-block="3" data-title="On a loop"></section>
+        <section class="card" data-type="section" data-ref="JOINUS"></section>
+    </main>
+    <div id="section-TITLE" hidden>
+        <!-- CARD 1 — your current hero (kept as before) -->
+        <div class="wrap">
+            <div class="grid">
+                <!-- Left: desktop vase -->
+                <div class="vase" aria-hidden="true">
+                    <img id="vaseOpen_desktop" src="assets/img/vase_open.svg" alt="">
+                    <img id="vaseClosed_desktop" src="assets/img/vase_close.svg" alt="">
+                </div>
+                <!-- Right: frame that hugs the title -->
+                <section class="titleFrame" aria-label="LONG TIME FILM AFFAIR">
+                    <!-- Labels OUTSIDE the frame (top/bottom, thin) -->
+                    <div class="frameTop">SATURDAY, OCT. 25 17:00</div>
+                    <div class="title">
+                        <div>LONG</div>
+                        <div>TIME</div>
+                        <span style="color:#DC0073;">FILM</span>
+                        <div>AFFAIR</div>
+                    </div>
+                    <a href="https://maps.app.goo.gl/Fm5io8E3F1eFzagB8" class="frameBottom" target="_blank" rel="noopener noreferrer">
+                        ACKERSTRASSE 9 · 10115 BERLIN<br>VILLA KUNTERBUNT</a> <!-- Mobile vase overlapping bottom-left (half in/out) -->
+                    <div class="vaseOverlap" aria-hidden="true">
+                        <img id="vaseOpen_mobile" src="assets/img/vase_open.svg" alt="">
+                        <img id="vaseClosed_mobile" src="assets/img/vase_close.svg" alt="">
+                    </div>
+                </section>
             </div>
-
-            <div class="frameBottom">ACKERSTRASSE 9 · 10115 BERLIN</br>VILLA KUNTERBUNT</div>
-
-            <!-- Mobile vase overlapping bottom-left (half in/out) -->
-            <div class="vaseOverlap" aria-hidden="true">
-              <img id="vaseOpen_mobile"   src="assets/img/vase_open.svg"   alt="">
-              <img id="vaseClosed_mobile" src="assets/img/vase_close.svg"  alt="">
+        </div>
+        <div class="scroll-hint">
+            <span>scroll to continue</span>
+            <div class="arrow">↓</div>
+        </div>
+    </div>
+    <div id="section-ABOUT" hidden>
+        <div class="about-wrap">
+            <h2>ABOUT</h2>
+            <div class="underline"></div>
+            <p>
+                LTFA aims to give a stage to films that deserve more eyes. Each edition centers on independent cinema
+                and unfolds into a day of films, music, conversation, and drinks.
+            </p>
+            <p>
+                It’s not just about watching a film — it’s about the people, the music, the drinks,
+                the new friends, the talking, the images...
+            </p>
+            <p><span class="pink-line">and all the eyes.</span></p>
+            <div class="btn-row">
+                <div class="cal-wrap">
+                    <button id="addCal" class="btn-ical">Add to calendar</button>
+                    <div id="calSheet" class="cal-sheet" hidden>
+                        <button data-cal="apple">Apple Calendar</button>
+                        <button data-cal="google">Google Calendar</button>
+                        <button data-cal="outlook">Outlook</button>
+                        <button class="cancel">Cancel</button>
+                    </div>
+                </div>
+                <a class="btn-ical btn-pink" href="https://buytickets.at/miaumiau/1896252" target="_blank">
+                    Get tickets
+                </a>
             </div>
-          </section>
         </div>
-      </div>
-    </section>  
-
-
-
-   <section class="panel about" id="about">
-
-    <div class="card" id="card-2">
-      <h2 class="about-title">ABOUT</h2>
-      <p class="about-copy">
-        LTFA aims to give a stage to films that deserve more eyes. Each edition centers on independent cinema 
-        and unfolds into a day of films, music, conversation, and drinks.
-    </br></br>
-        It’s not just about watching a film — it’s about the people, the music, the drinks, 
-        the new friends, the talking, the images, and all the eyes.
-      </p>
-
-    <div class="btn-row">
-  <div class="cal-wrap">
-    <button id="addCal" class="btn-ical">Add to calendar</button>
-
-    <!-- tiny sheet -->
-    <div id="calSheet" class="cal-sheet" hidden>
-      <button data-cal="apple">Apple Calendar</button>
-      <button data-cal="google">Google Calendar</button>
-      <button data-cal="outlook">Outlook</button>
-      <button class="cancel">Cancel</button>
     </div>
-  </div>
-
-  <button class="btn-ical btn-pink" href="https://buytickets.at/miaumiau/1896252">Get tickets</button>
-</div>
+    <div id="section-DESERTKIN" hidden>
+        <div class="hang-wrap">
+            <h2>DESERT KIN</h2>
+            <p class="sub">Live Performance</p>
+            <div class="rv-stack">
+                <div class="rv-icons">
+                    <a href="https://www.instagram.com/desert.kin/" target="_blank" rel="noopener" aria-label="Instagram">
+                        <img src="assets/icons/instagram.png" alt="Instagram">
+                    </a>
+                    <a href="https://open.spotify.com/artist/4r6zPPfBvEcFPqc11qHjHk" target="_blank" rel="noopener" aria-label="SoundCloud">
+                        <img src="assets/icons/spotify.png" alt="Spotify">
+                    </a>
+                </div>
+                <img class="rv-vase" id="vaseOpen_hang" src="assets/img/vase_open.svg" alt="">
+                <img class="rv-vase" id="vaseClosed_hang" src="assets/img/vase_close.svg" alt="">
+            </div>
+        </div>
     </div>
-  </section>
-
-    <!-- CARD 2 — first block from data.csv -->
-    <section class="card card-about" id="card-3">
-      <div class="block">
-        <header class="block-head">
-          <div class="block-time" data-slot="time-1">TIME FROM – TO</div>
-        </header>
-        <div class="frame">
-          <div class="film-list" id="films-1"></div>
+    <div id="section-RADIOVAMPIRO" hidden>
+        <div class="hang-wrap">
+            <h2>RADIO VAMPIR0</h2>
+            <p class="sub">Live DJ Set</p>
+            <div class="rv-stack">
+                <div class="rv-icons">
+                    <a href="https://www.instagram.com/radiovampiro_" target="_blank" rel="noopener" aria-label="Instagram">
+                        <img src="assets/icons/instagram.png" alt="Instagram">
+                    </a>
+                    <a href="https://soundcloud.com/refugeworldwide/miercoles-de-salsa-radio" target="_blank" rel="noopener" aria-label="SoundCloud">
+                        <img src="assets/icons/soundcloud.png" alt="SoundCloud">
+                    </a>
+                </div>
+                <img class="rv-vase" id="vaseOpen_hang" src="assets/img/vase_open.svg" alt="">
+                <img class="rv-vase" id="vaseClosed_hang" src="assets/img/vase_close.svg" alt="">
+            </div>
         </div>
-      </div>
-    </section>
-
-    <!-- CARD 3 — second block from data.csv -->
-    <section class="card card-block" id="card-4">
-      <div class="block">
-        <header class="block-head">
-          <div class="block-time" data-slot="time-2">TIME FROM – TO</div>
-        </header>
-        <div class="frame">
-          <div class="film-list" id="films-2"></div>
+    </div>
+    <div id="section-JOINUS" hidden>
+        <div class="hang-wrap">
+            <h2>JOIN US</h2>
+            <div class="underline"></div>
+            <p>Invite your friends, your family, your boyfriend, your ex-boyfriend, the dog, the cat, the neighbour, the guy from the späti, your friend who loves movies, and the one who hates them — we’ll convert him.</p>
+            <p>Invite your crush, your ex-crush, the guy in the friend zone, the roommate and the ex-roommate, the postman, the ‘DJ’, the real DJ, and the stranger you met on the bus.</p>
+            <p>Just come and be part of the affair...</p>
+            <a class="btn-ical btn-pink" href="https://buytickets.at/miaumiau/1896252" target="_blank" rel="noopener">
+                Get your tickets
+            </a>
         </div>
-      </div>
-    </section>
-
-    <!-- CARD 4 — Hangout (no frame, with vase) -->
-    <section class="card card-hang" id="card-4">
-      <div class="hang-wrap">
-        <h2>HANG OUT WITH RADIO VAMPIR0</h2>
-        <p>Music · chat · drinks</p>
-        <div class="vase blink">
-          <img id="vaseOpen_hang"   src="assets/img/vase_open.svg"   alt="">
-          <img id="vaseClosed_hang" src="assets/img/vase_close.svg"  alt="">
-        </div>
-      </div>
-    </section>
-  </main>
- 
-
-
+    </div>
     <!-- FilmModal Cards -->
-  <div id="filmModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal-backdrop"></div>
-    <article class="modal-card">
-      <button class="modal-close" aria-label="Close">×</button>
-      <div class="modal-media" hidden></div>
-      <h3 class="modal-title"></h3>
-      <p class="modal-meta"></p>
-      <p class="modal-sinopsis"></p>
-      <a class="modal-trailer" target="_blank" rel="noopener noreferrer" hidden>Watch trailer ↗</a>
-    </article>
-  </div>
-
-  <script src="assets/app.js"></script>
+    <div id="filmModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-backdrop"></div>
+        <article class="modal-card">
+            <button class="modal-close" aria-label="Close">×</button>
+            <div class="modal-media" hidden></div>
+            <h3 class="modal-title"></h3>
+            <p class="modal-meta"></p>
+            <p class="modal-sinopsis"></p>
+            <a class="modal-trailer" target="_blank" rel="noopener noreferrer" hidden>Watch trailer ↗</a>
+        </article>
+    </div>
+    <script src="assets/app.js"></script>
 </body>
+
 </html>
