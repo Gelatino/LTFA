@@ -412,6 +412,7 @@ body.modal-open .cards {
   border-radius: 40px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
+  margin-bottom: 2rem;
 }
 .card[data-ref="JOINUS"] .btn-ical.btn-pink:hover {
   background: #000;
@@ -419,6 +420,33 @@ body.modal-open .cards {
 }
 
 
+
+/* small inline instagram icon */
+.insta-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 1.2rem;
+  color: #111;
+  text-align: center;
+  margin-top: 10rem;
+  width: 100%
+}
+
+.insta-line .insta-icon {
+  width: 40px;      /* adjust size */
+  height: 40px;
+  object-fit: contain;
+  vertical-align: middle;
+  transition: transform 0.2s ease;
+  background:var(--pnk);
+}
+
+.insta-line a:hover .insta-icon {
+  transform: scale(1.1);
+  
+}
 
 /* ===== Mobile tweaks ===== */
 @media (max-width:720px){
