@@ -130,6 +130,17 @@ body{
 #vaseOpen_mobile{ display:block; }
 #vaseClosed_mobile{ display:none; }
 
+.disclaimer {
+  font-size: 0.8rem !important;
+  font-style: italic;
+  opacity: 0.75;
+  text-align: center;
+  margin-top: 2rem;
+  max-width: 600px;
+  margin-inline: auto;
+}
+
+
 
 /* ===== BLOCK CARDS ABOUT ===== */
 /* Tighten the ABOUT panel */
@@ -301,6 +312,7 @@ body{
 #vaseOpen_hang{ display:block; }
 #vaseClosed_hang{ display:none; }
 
+
 /* ===== Modal Cards tweaks ===== */
 
 .modal{ position:fixed; inset:0; display:none; z-index:9999; }
@@ -445,7 +457,7 @@ body.modal-open .cards {
 
 .insta-line a:hover .insta-icon {
   transform: scale(1.1);
-  
+
 }
 
 /* ===== Mobile tweaks ===== */
